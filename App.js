@@ -125,8 +125,6 @@ export default function App() {
           component={Search}
           options={() => ({
             headerTitle: () => (<SearchBar />),
-            headerRight: () => (
-            <FontAwesome5 name="search" size={24} style={styles.icon}/>)
           })}
         />
       </Stack.Navigator>

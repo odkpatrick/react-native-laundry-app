@@ -1,50 +1,96 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { FontAwesome5, FontAwesome } from '@expo/vector-icons'
+import { Entypo, FontAwesome5, FontAwesome } from '@expo/vector-icons'
+
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+
+import SignUp from '../screens/SignUp'
 
 import ModalTitle from './modalTitle'
 
+const Stack = createStackNavigator()
+
 export default function Account({ closeAccount }) {
-    const Link = ({ icon, value }) => (
-        <View style={styles.link}>
-            <FontAwesome5 name={icon} size={22} style={styles.LinkIcon}/>
+    const Link = ({ icon, value, handleNav }) => (
+        <Pressable 
+            style={styles.link}
+            onPress={() => {
+                if(handleNav && icon==="pencil") {
+                    handleNav()
+                }
+            }}
+        >
+            <Entypo name={icon} size={24} style={styles.LinkIcon}/>
             <Text style={styles.linkText}>{value}</Text>
-        </View>
+        </Pressable>
     )
 
-    const Details = ({title, links}) => (
+    const Details = ({title, links, handleNav}) => (
         <View style={styles.detailContainer}>
             <Text style={styles.detailTitle}>{title}</Text>
             {
-                links.map((link) => (<Link icon={link.icon} value={link.value} />))
+                links.map((link, index) => (<Link icon={link.icon} value={link.value} key={index} handleNav={handleNav} />))
             }
         </View>
     )
 
-    return (
-        <View style={styles.container}>
-            <ModalTitle 
-                title="Account"
-                closeAccount={closeAccount}
-            />
+    const AccountScreen = ({ navigation }) => {
+        const handleRegister = () => {
+            navigation.navigate('Register')
+        }
+
+        return (
+        <>
             <View style={styles.body}>
                 <Details 
                     title="Your details"
                     links={[
-                        {icon: 'search', value:'Create a new account'},
-                        {icon: 'search', value:'Sign in to an existing account'},
+                        {icon: 'pencil', value:'Create a new account'},
+                        {icon: 'login', value:'Sign in to an existing account'},
                     ]}
+                    handleNav={handleRegister}
                 />
                 <Details 
                     title="Our details"
                     links={[
-                        {icon: 'search', value:'Help'},
-                        {icon: 'search', value:'Terms of service'},
-                        {icon: 'search', value:'Privacy Policy'},
+                        {icon: 'help', value:'Help'},
+                        {icon: 'open-book', value:'Terms of service'},
+                        {icon: 'shield', value:'Privacy Policy'},
                     ]}
                 />
             </View>
-        </View>
+        </>
+    )}
+
+    return (
+        <NavigationContainer style={styles.container} independent={true}>
+            <Stack.Navigator>
+                <Stack.Screen 
+                    name="Account"
+                    component={AccountScreen}
+                    options={() => ({
+                        headerRight: () => (
+                            <>
+                                <Pressable 
+                                    onPress={closeAccount}
+                                    style={styles.close}
+                                >
+                                    <Entypo name="cross" size={40} color="#8e8e8e"/>
+                                </Pressable>
+                            </>
+                        )
+                    })}
+                />
+                <Stack.Screen 
+                    name="Register"
+                    component={SignUp}
+                    options={() => ({
+
+                    })}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     )
 }
 
@@ -58,9 +104,9 @@ const styles = StyleSheet.create({
     },
     detailContainer: {
         backgroundColor: '#fff',
-        paddingHorizontal: 20,
+        paddingHorizontal: 30,
         paddingVertical: 15,
-        marginBottom: 5
+        marginBottom: 2
     },
     link: {
         flexDirection: 'row',
@@ -68,7 +114,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15
     },
     detailTitle: {
-        fontSize: 24,
+        fontSize: 22,
         paddingVertical: 10
     },
     linkText: {
