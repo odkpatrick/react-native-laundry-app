@@ -1,6 +1,10 @@
 import React from 'react'
-import { Pressable, Text, View, StyleSheet } from 'react-native'
-import { Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons'
+import { Pressable, View, StyleSheet } from 'react-native'
+
+import { Icon, Text } from 'react-native-elements'
+
+import { iOSUIKit } from 'react-native-typography'
+
 
 export default function Checkout({ handleOpenBasket }) {
   return (
@@ -9,10 +13,12 @@ export default function Checkout({ handleOpenBasket }) {
         onPress={handleOpenBasket}
         style={styles.container}
       >
-        <FontAwesome5 name="shopping-basket" size={24} style={styles.icon}/>
-        <Text style={styles.text}>Your basket({2})</Text>
-        <Text style={styles.text}>£ 25.99</Text>
-        <Feather name="arrow-right" size={24} style={styles.icon}/>
+        <View style={styles.details}>
+          <Icon name="shopping-basket" type="fontisto" size={22} style={styles.icon}/>
+          <Text style={{...iOSUIKit.body, ...styles.text}}>Your basket({2})</Text>
+          <Text style={{...iOSUIKit.bodyEmphasized, ...styles.text}}>£ 25.99</Text>
+        </View>
+        <Icon name="arrow-right" size={20} type="fontisto" style={{...styles.icon}}/>
       </Pressable>
     </View>
   )
@@ -25,11 +31,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#8e8e8e'
+  },
+  details: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   icon: {
-    color: '#8e8e8e',
     padding: 10
   },
   text: {

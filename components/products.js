@@ -1,7 +1,9 @@
 import React from 'react'
-import { FlatList, Image, Text, Pressable, View, StyleSheet, useWindowDimensions } from 'react-native'
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
+import { FlatList, Image, Pressable, View, StyleSheet, useWindowDimensions } from 'react-native'
 
+import { Icon, Text } from 'react-native-elements'
+
+import { iOSUIKit, iOSColors, systemWeights } from 'react-native-typography'
 
 import img01 from '../assets/img001.jpg'
 import img02 from '../assets/img002.jpg'
@@ -81,9 +83,9 @@ const Product = ({ title, img, price, width, handleViewProduct }) => (
             handleViewProduct()
         }}
     >
-        <Image source={img} style={{resizeMode: 'cover', width: width, ...(styles.productImage)}}/>
-        <Text style={styles.productTitle}>{title}</Text>
-        <Text style={styles.productPrice}>{price}</Text>
+        <Image source={img} style={{resizeMode: 'cover', width: width, ...styles.productImage}}/>
+        <Text style={{...iOSUIKit.title3, ...styles.productTitle}}>{title}</Text>
+        <Text style={{...iOSUIKit.title3Emphasizedmm, ...styles.productPrice}}>{price}</Text>
     </Pressable>
 )
 
@@ -130,23 +132,21 @@ const styles = StyleSheet.create({
 
     },
     productTitle: {
-        padding: 10,
+        padding: 15,
         fontSize: 18,
         fontWeight: 'bold',
         position: 'absolute',
         bottom: 0,
-        color: '#000'
     },
     productImage: {
         height: 200,
-        marginBottom: 5
+        marginBottom: 5,
     },
     productPrice: {
-        padding: 10,
+        padding: 15,
         fontSize: 20,
         position: 'absolute',
         bottom: 0,
         right: 0,
-        color: '#000'
     }   
 })

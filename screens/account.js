@@ -1,13 +1,15 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { Entypo, FontAwesome5, FontAwesome } from '@expo/vector-icons'
+import { Entypo } from '@expo/vector-icons'
+
+import { Text } from 'react-native-elements'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import SignUp from '../screens/SignUp'
+import SignUp from './SignUp'
 
-import ModalTitle from './modalTitle'
+import { material } from 'react-native-typography'
 
 const Stack = createStackNavigator()
 

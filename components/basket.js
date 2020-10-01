@@ -17,6 +17,7 @@ export default function Account({ closeBasket }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#fff'
     }
 })

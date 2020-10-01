@@ -17,6 +17,7 @@ export default function Account({ closeOrders }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#fff'
     }
 })
