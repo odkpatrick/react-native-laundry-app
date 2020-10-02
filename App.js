@@ -1,23 +1,23 @@
 import React, { useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
-import { Icon, Text } from 'react-native-elements'
+import { Icon, SearchBar, Text } from 'react-native-elements'
+
+import { iOSUIKit } from 'react-native-typography'
+
+import Account from './screens/Account'
+import Basket from './screens/Basket'
+import Orders from './screens/Orders'
+import Product from './screens/Product'
+import Search from './screens/Search'
+
+import Categories from './components/categories'
+import Checkout from './components/checkout'
+import Products from './components/products'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import { iOSUIKit } from 'react-native-typography'
-
-import Basket from './components/basket'
-import Categories from './components/categories'
-import Checkout from './components/checkout'
-import Products from './components/products'
-import Orders from './components/orders'
-import SearchBar from './components/searchBar'
-
-import Account from './screens/account'
-import Product from './screens/Product'
-import Search from './screens/Search'
 
 const Stack = createStackNavigator()
 
@@ -54,18 +54,13 @@ const HeaderRight = ({ navigation }) => (
   </View> 
 )
 
-export default function App() {
-  const [ordersModalVisible, setOrdersModalVisible] = useState(false)
-  const [basketModalVisible, setBasketModalVisible] = useState(false)
+export default function App() {  
+  const [search, updateSearch] = useState([''])
 
-  const handleOpenOrders = function(){
-    setOrdersModalVisible(!ordersModalVisible)
+  const updateSearchValue = (value) => {
+    updateSearch(value)
   }
 
-  const handleOpenBasket = function(){
-    setBasketModalVisible(!basketModalVisible)
-  }  
-  
   const HomeScreen = ({ navigation }) => {
     const handleViewProduct = () => {
       navigation.navigate("Product")
@@ -123,7 +118,7 @@ export default function App() {
           name="Search"
           component={Search}
           options={() => ({
-            headerTitle: () => (<SearchBar />),
+            headerTitle: "Search",
           })}
         />
         <Stack.Screen 

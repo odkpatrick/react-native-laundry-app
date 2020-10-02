@@ -1,127 +1,99 @@
-import React from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { Entypo } from '@expo/vector-icons'
+import React, { useState } from 'react'
+import { Alert, Modal, StyleSheet, View } from 'react-native'
 
-import { Text } from 'react-native-elements'
+import { Icon, ListItem, Text } from 'react-native-elements'
 
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { iOSUIKit } from 'react-native-typography'
 
-import SignUp from './SignUp'
+import RegisterModal from '../components/register'
+import SignInModal from '../components/signIn'
 
-import { material } from 'react-native-typography'
+const clientList =  [
+    {icon: 'user', value:'Create a new account'},
+    {icon: 'login', value:'Sign in to an existing account'}
+]
 
-const Stack = createStackNavigator()
+const myList = [
+    {icon: 'question', value:'Help'},
+    {icon: 'book', value:'Terms of service'},
+    {icon: 'lock', value:'Privacy Policy'}
+]
 
-export default function Account({ closeAccount }) {
-    const Link = ({ icon, value, handleNav }) => (
-        <Pressable 
-            style={styles.link}
-            onPress={() => {
-                if(handleNav && icon==="pencil") {
-                    handleNav()
-                }
-            }}
-        >
-            <Entypo name={icon} size={24} style={styles.LinkIcon}/>
-            <Text style={styles.linkText}>{value}</Text>
-        </Pressable>
-    )
+export default function Account() {
+    const [registerModalVisible, setRegisterModalVisible] = useState(false)
+    const [signInModalVisible, setSignInModalVisible] = useState(false)
 
-    const Details = ({title, links, handleNav}) => (
-        <View style={styles.detailContainer}>
-            <Text style={styles.detailTitle}>{title}</Text>
-            {
-                links.map((link, index) => (<Link icon={link.icon} value={link.value} key={index} handleNav={handleNav} />))
-            }
-        </View>
-    )
+    const showRegisterModal = () => {
+        setRegisterModalVisible(true)
+    }
 
-    const AccountScreen = ({ navigation }) => {
-        const handleRegister = () => {
-            navigation.navigate('Register')
-        }
+    const showSignInModal = () => {
+        setSignInModalVisible(true)
+    }
 
-        return (
-        <>
-            <View style={styles.body}>
-                <Details 
-                    title="Your details"
-                    links={[
-                        {icon: 'pencil', value:'Create a new account'},
-                        {icon: 'login', value:'Sign in to an existing account'},
-                    ]}
-                    handleNav={handleRegister}
-                />
-                <Details 
-                    title="Our details"
-                    links={[
-                        {icon: 'help', value:'Help'},
-                        {icon: 'open-book', value:'Terms of service'},
-                        {icon: 'shield', value:'Privacy Policy'},
-                    ]}
-                />
-            </View>
-        </>
-    )}
+    const handleClientDetail = (i) => {
+        (i === 0) ? showRegisterModal() : showSignInModal() 
+    }
+
+    const handlePress = (i) => {
+        return
+    }
 
     return (
-        <NavigationContainer style={styles.container} independent={true}>
-            <Stack.Navigator>
-                <Stack.Screen 
-                    name="Account"
-                    component={AccountScreen}
-                    options={() => ({
-                        headerRight: () => (
-                            <>
-                                <Pressable 
-                                    onPress={closeAccount}
-                                    style={styles.close}
-                                >
-                                    <Entypo name="cross" size={40} color="#8e8e8e"/>
-                                </Pressable>
-                            </>
-                        )
-                    })}
+        <View style={styles.container}>
+            <Text style={{...iOSUIKit.bodyEmphasized, ...styles.detailTitle}}>Your details</Text>
+            {
+                clientList.map((item, i) => (
+                    <ListItem key={i} bottomDivider onPress={() => {handleClientDetail(i)}}>
+                        <Icon name={item.icon} type="antdesign"/>
+                        <ListItem.Content>
+                            <ListItem.Title>{item.value}</ListItem.Title>
+                        </ListItem.Content>
+                        <ListItem.Chevron/>
+                    </ListItem>
+                ))
+            }
+            <Text style={{...iOSUIKit.bodyEmphasized, ...styles.detailTitle}}>Our details</Text>
+            {
+                myList.map((item, i) => (
+                    <ListItem key={i} bottomDivider onPress={() => {handlePress(i)}}>
+                        <Icon name={item.icon} type="antdesign"/>
+                        <ListItem.Content>
+                            <ListItem.Title>{item.value}</ListItem.Title>
+                        </ListItem.Content>
+                    </ListItem>
+                ))
+            }
+            <Modal 
+                animationType="slide"
+                visible={registerModalVisible}
+                hardwareAccelerated={true}
+            >
+                <RegisterModal 
+                    close={() => {setRegisterModalVisible(false)}}
                 />
-                <Stack.Screen 
-                    name="Register"
-                    component={SignUp}
-                    options={() => ({
-
-                    })}
+            </Modal>
+            <Modal 
+                animationType="slide"
+                visible={signInModalVisible}
+                hardwareAccelerated={true}
+            >
+                <SignInModal 
+                    close={() => {setSignInModalVisible(false)}}
                 />
-            </Stack.Navigator>
-        </NavigationContainer>
+            </Modal>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
-    },
-    body: {
         flex: 1,
-        backgroundColor: '#cecece',
-    },
-    detailContainer: {
-        backgroundColor: '#fff',
-        paddingHorizontal: 30,
-        paddingVertical: 15,
-        marginBottom: 2
-    },
-    link: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 15
+        backgroundColor: "#f0f0f0"
     },
     detailTitle: {
-        fontSize: 22,
-        paddingVertical: 10
-    },
-    linkText: {
-        fontSize: 18,
-        marginLeft: 20
+        padding: 20,
+        backgroundColor: "#fff",
     },
     LinkIcon: {
         color: '#8e8e8e'

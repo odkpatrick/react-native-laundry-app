@@ -1,17 +1,20 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+
+import { Pressable, StyleSheet, View } from 'react-native'
+
+import { Icon, Text } from 'react-native-elements'
 
 import { Entypo } from '@expo/vector-icons'
 
-export default function ModalTitle({ title, closeAccount }) {
+export default function ModalTitle({ title, close }) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
             <Pressable 
-                onPress={closeAccount}
+                onPress={close}
                 style={styles.close}
             >
-                <Entypo name="cross" size={40} color="#8e8e8e" style={styles.icon}/>
+                <Icon name="close" type="fontisto"/>
             </Pressable>
         </View>
     )
@@ -23,7 +26,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: '#8e8e8e',
+        borderBottomColor: '#f0f0f0',
         paddingVertical: 10
     },
     title: {

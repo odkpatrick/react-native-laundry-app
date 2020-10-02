@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: iOSColors.lightGray
   },
   category: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 25,
   },
   categoryIcon: {
     textAlign: 'center'
