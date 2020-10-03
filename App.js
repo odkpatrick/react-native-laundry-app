@@ -1,9 +1,24 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
-import { Icon, SearchBar, Text } from 'react-native-elements'
+import { Icon, Text } from 'react-native-elements'
 
 import { iOSUIKit } from 'react-native-typography'
+
+// my web app's Firebase configuration
+import * as firebase from 'firebase'
+
+var firebaseConfig = {
+  apiKey: "AIzaSyCmcH8ULBRDRylGCgOiNl6X5_CJvBM59gg",
+  authDomain: "laundryapp-a99d6.firebaseapp.com",
+  databaseURL: "https://laundryapp-a99d6.firebaseio.com",
+  projectId: "laundryapp-a99d6",
+  storageBucket: "laundryapp-a99d6.appspot.com",
+  messagingSenderId: "387778728147",
+  appId: "1:387778728147:web:ba6d6adeb6ddebfeda0426"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 import Account from './screens/Account'
 import Basket from './screens/Basket'
@@ -54,83 +69,105 @@ const HeaderRight = ({ navigation }) => (
   </View> 
 )
 
-export default function App() {  
-  const [search, updateSearch] = useState([''])
-
-  const updateSearchValue = (value) => {
-    updateSearch(value)
+export default class App extends React.Component {  
+  constructor(props) {
+    super(props)
   }
 
-  const HomeScreen = ({ navigation }) => {
-    const handleViewProduct = () => {
-      navigation.navigate("Product")
-    }
+  render() {
+    const HomeScreen = ({ navigation }) => {
+      const CategoryRefContainer = useRef(null)
+      const ProductsRefContainer = useRef(null)
 
-    const handleViewBasket = () => {
-      navigation.navigate("Basket")
-    }
+      const handleScroll = (i) => {
+        CategoryRefContainer.current.scrollToIndex({
+          index: i,
+          viewPosition: 0.5
+        })
 
+        ProductsRefContainer.current.scrollToIndex({
+          index: i
+        })
+      }
+
+      const handleProductsScroll = (event) => {
+        if(event.nativeEvent.velocity.x) {
+          console.log("go +1 right")
+        } else {
+          console.log("go -1 left")
+        }
+      }
+
+      const handleViewProduct = () => {
+        navigation.navigate("Product")
+      }
+  
+      const handleViewBasket = () => {
+        navigation.navigate("Basket")
+      }
+  
+      return (
+        <>
+          <Categories handleScroll={handleScroll} listRef={CategoryRefContainer}/>
+          <View style={styles.productsBody}>
+            <Products handleViewProduct={handleViewProduct} listRef={ProductsRefContainer} handleScroll={handleProductsScroll}/>
+            <Checkout handleOpenBasket={handleViewBasket}/>
+          </View>
+        </>
+      )
+    }
+  
     return (
-      <>
-        <Categories />
-        <View style={styles.productsBody}>
-          <Products handleViewProduct={handleViewProduct} />
-          <Checkout handleOpenBasket={handleViewBasket}/>
-        </View>
-      </>
+      <NavigationContainer style={styles.container}>
+        <Stack.Navigator>
+          <Stack.Screen 
+            name="Home"
+            component={HomeScreen}
+            options={({ navigation }) => ({
+              headerLeft: () => (<HeaderLeft navigation={navigation}/>),
+              headerTitle: () => (<HeaderTitle/>),
+              headerRight: () => (<HeaderRight navigation={navigation}/>)
+            })}
+          />
+          <Stack.Screen 
+            name="Account"
+            component={Account}
+            options={{
+              headerTitle: "Account Settings"
+            }}
+          />
+          <Stack.Screen 
+            name="Product"
+            component={Product}
+            options={{
+              headerTitle: "Product"
+            }}
+          />
+          <Stack.Screen 
+            name="Orders"
+            component={Orders}
+            options={{
+              headerTitle: "Your Orders"
+            }}
+          />
+          <Stack.Screen 
+            name="Search"
+            component={Search}
+            options={() => ({
+              headerTitle: "Search",
+            })}
+          />
+          <Stack.Screen 
+            name="Basket"
+            component={Basket}
+            options={() => ({
+              headerTitle: "Basket",
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     )
   }
-
-  return (
-    <NavigationContainer style={styles.container}>
-      <Stack.Navigator>
-        <Stack.Screen 
-          name="Home"
-          component={HomeScreen}
-          options={({ navigation }) => ({
-            headerLeft: () => (<HeaderLeft navigation={navigation}/>),
-            headerTitle: () => (<HeaderTitle/>),
-            headerRight: () => (<HeaderRight navigation={navigation}/>)
-          })}
-        />
-        <Stack.Screen 
-          name="Account"
-          component={Account}
-          options={{
-            headerTitle: "Account Settings"
-          }}
-        />
-        <Stack.Screen 
-          name="Product"
-          component={Product}
-          options={{
-            headerTitle: "Product"
-          }}
-        />
-        <Stack.Screen 
-          name="Orders"
-          component={Orders}
-          options={{
-            headerTitle: "Your Orders"
-          }}
-        />
-        <Stack.Screen 
-          name="Search"
-          component={Search}
-          options={() => ({
-            headerTitle: "Search",
-          })}
-        />
-        <Stack.Screen 
-          name="Basket"
-          component={Basket}
-          options={() => ({
-            headerTitle: "Basket",
-          })}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
 }
 
 const styles = StyleSheet.create({

@@ -109,7 +109,7 @@ const CategoryProducts = function ({ data, handleViewProduct }) {
     )
 }
 
-export default function Products({ handleViewProduct }) {
+export default function Products({ handleViewProduct, listRef, handleScroll }) {
     const renderItem = ({ item }) => (
         <CategoryProducts 
             data={item.products}
@@ -119,7 +119,13 @@ export default function Products({ handleViewProduct }) {
 
     return (
         <View style={styles.container}>
-            <FlatList data={data} renderItem={renderItem} horizontal={true}/>
+            <FlatList
+                data={data}
+                renderItem={renderItem}
+                horizontal={true}
+                ref={listRef}
+                onScroll={handleScroll}
+            />
         </View>
     )
 }

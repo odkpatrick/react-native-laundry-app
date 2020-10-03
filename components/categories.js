@@ -1,4 +1,5 @@
 import React from 'react'
+import { render } from 'react-dom'
 import { FlatList, View, Pressable, StyleSheet } from 'react-native'
 
 import { Icon, Text } from 'react-native-elements'
@@ -17,15 +18,11 @@ const data = [
   {id: '8', title: 'Tops', icon: 'suitcase'},
 ]
 
-const Category = ({ icon, title, id }) => {
-  const showIndex = () => {
-    alert(id+' pressed')
-  }
-
+const Category = ({ icon, title, id, handleScroll }) => {
   return (
     <View style={styles.category}>
       <Pressable 
-        onPress={() => {showIndex()}}     
+        onPress={() => {handleScroll(id)}}     
       >
         <Icon name={icon} type="fontisto" size={38} style={{...styles.categoryIcon}} color="#8e8e8e"/>
         <Text style={{...iOSUIKit.body, ...systemWeights.regular, ...styles.categoryTitle}}>{title}</Text>
@@ -34,14 +31,14 @@ const Category = ({ icon, title, id }) => {
   )
 }
 
-export default function Categories() {
+export default function Categories ({ handleScroll, listRef }) {
   const renderItem = ({ item }) => (
-    <Category icon={item.icon} title={item.title} id={item.id}/>
+    <Category icon={item.icon} title={item.title} id={item.id} handleScroll={handleScroll}/>
   )
 
   return (
     <View style={styles.container}>
-      <FlatList renderItem={renderItem} data={data} horizontal={true}/>
+      <FlatList renderItem={renderItem} data={data} horizontal={true} ref={listRef}/>
     </View>
   )
 }
