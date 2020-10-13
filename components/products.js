@@ -1,7 +1,8 @@
-import React from 'react'
-import { FlatList, Image, Pressable, View, StyleSheet, useWindowDimensions } from 'react-native'
+import React, { useState } from 'react'
+import { Animated, Image, Pressable, View, ScrollView, StyleSheet, useWindowDimensions } from 'react-native'
 
 import { Icon, Text } from 'react-native-elements'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { iOSUIKit, iOSColors, systemWeights } from 'react-native-typography'
 
@@ -110,6 +111,18 @@ const CategoryProducts = function ({ data, handleViewProduct }) {
 }
 
 export default function Products({ handleViewProduct, listRef, handleScroll }) {
+    const viewabilityConfig = {
+        viewAreaCoveragePercentThreshold: 100,
+        minimumViewTime: 250
+    }
+
+    const onViewableItemsChanged = ({viewableItems}) => {
+        if(viewableItems.length) {
+            const index = viewableItems[0].index
+            handleScroll(index)
+        }
+    }
+
     const renderItem = ({ item }) => (
         <CategoryProducts 
             data={item.products}
@@ -122,9 +135,12 @@ export default function Products({ handleViewProduct, listRef, handleScroll }) {
             <FlatList
                 data={data}
                 renderItem={renderItem}
-                horizontal={true}
                 ref={listRef}
-                onScroll={handleScroll}
+                horizontal={true}
+                snapToInterval={0}
+                snapToAlignment={'center'}
+                viewabilityConfig={viewabilityConfig}
+                onViewableItemsChanged={onViewableItemsChanged}
             />
         </View>
     )

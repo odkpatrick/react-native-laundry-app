@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
 import { Icon, Text } from 'react-native-elements'
@@ -7,7 +7,7 @@ import { iOSUIKit } from 'react-native-typography'
 
 // my web app's Firebase configuration
 import * as firebase from 'firebase'
-
+/*
 var firebaseConfig = {
   apiKey: "AIzaSyCmcH8ULBRDRylGCgOiNl6X5_CJvBM59gg",
   authDomain: "laundryapp-a99d6.firebaseapp.com",
@@ -16,9 +16,9 @@ var firebaseConfig = {
   storageBucket: "laundryapp-a99d6.appspot.com",
   messagingSenderId: "387778728147",
   appId: "1:387778728147:web:ba6d6adeb6ddebfeda0426"
-};
+};*/
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+/*firebase.initializeApp(firebaseConfig);*/
 
 import Account from './screens/Account'
 import Basket from './screens/Basket'
@@ -90,12 +90,11 @@ export default class App extends React.Component {
         })
       }
 
-      const handleProductsScroll = (event) => {
-        if(event.nativeEvent.velocity.x) {
-          console.log("go +1 right")
-        } else {
-          console.log("go -1 left")
-        }
+      const handleProductsScroll = (i) => {            
+        CategoryRefContainer.current.scrollToIndex({
+          index: i,
+          viewPosition: 0.5
+        })
       }
 
       const handleViewProduct = () => {
