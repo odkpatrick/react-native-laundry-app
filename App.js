@@ -1,24 +1,9 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
 import { Icon, Text } from 'react-native-elements'
 
 import { iOSUIKit } from 'react-native-typography'
-
-// my web app's Firebase configuration
-import * as firebase from 'firebase'
-/*
-var firebaseConfig = {
-  apiKey: "AIzaSyCmcH8ULBRDRylGCgOiNl6X5_CJvBM59gg",
-  authDomain: "laundryapp-a99d6.firebaseapp.com",
-  databaseURL: "https://laundryapp-a99d6.firebaseio.com",
-  projectId: "laundryapp-a99d6",
-  storageBucket: "laundryapp-a99d6.appspot.com",
-  messagingSenderId: "387778728147",
-  appId: "1:387778728147:web:ba6d6adeb6ddebfeda0426"
-};*/
-// Initialize Firebase
-/*firebase.initializeApp(firebaseConfig);*/
 
 import Account from './screens/Account'
 import Basket from './screens/Basket'
@@ -31,8 +16,33 @@ import Checkout from './components/checkout'
 import Products from './components/products'
 
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator } from '@react-navigation/stack';
 
+import img01 from './assets/img001.jpg'
+import img02 from './assets/img002.jpg'
+import img03 from './assets/img003.jpg'
+import img04 from './assets/img004.jpg'
+import img05 from './assets/img005.jpg'
+
+import * as firebase from 'firebase'
+
+// web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyCmcH8ULBRDRylGCgOiNl6X5_CJvBM59gg",
+  authDomain: "laundryapp-a99d6.firebaseapp.com",
+  databaseURL: "https://laundryapp-a99d6.firebaseio.com",
+  projectId: "laundryapp-a99d6",
+  storageBucket: "laundryapp-a99d6.appspot.com",
+  messagingSenderId: "387778728147",
+  appId: "1:387778728147:web:a399f3b72a250afdda0426"
+};
+
+// Initialize Firebase if not yet, fix before deploying
+if(firebase.apps.length == 0) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const database = firebase.database()
 
 const Stack = createStackNavigator()
 
@@ -72,31 +82,199 @@ const HeaderRight = ({ navigation }) => (
 export default class App extends React.Component {  
   constructor(props) {
     super(props)
+
+    this.state = {
+      categories: [],
+      products: [],
+      packages: null,
+
+      basket: [],
+      /*
+      categories: [
+        {id: '0', title: 'Suits', icon: 'suitcase-alt'},
+        {id: '1', title: 'Business', icon: 'suitcase'},
+        {id: '2', title: 'Home', icon: 'home'},
+        {id: '3', title: 'Outdoor', icon: 'swimsuit'},
+        {id: '4', title: 'Bedroom', icon: 'room'},
+        {id: '5', title: 'Accessories', icon: 'stopwatch'},
+        {id: '6', title: 'Laundry', icon: 'shopping-basket'},
+        {id: '7', title: 'Trousers', icon: 'swimsuit'},
+        {id: '8', title: 'Tops', icon: 'suitcase'},
+      ],
+      products: [
+        {id: '0', category: 'Suits', products:[
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'}
+        ]},
+        {id: '1', category: 'Suits', products:[
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'}
+        ]},
+        {id: '2', category: 'Suits', products:[
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+        ]},
+        {id: '3', category: 'Suits', products:[
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+        ]},
+        {id: '4', category: 'Suits', products:[
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+        ]},
+        {id: '5', category: 'Suits', products:[
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'}
+        ]},
+        {id: '6', category: 'Suits', products:[
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'}
+        ]},
+        {id: '7', category: 'Suits', products:[
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'}
+        ]},
+        {id: '8', category: 'Suits', products:[
+            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
+            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
+            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
+            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
+            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
+        ]},
+      ],
+      */
+    }
+
+    this.getCategories = this.getCategories.bind(this)
+    this.getPackages = this.getPackages.bind(this)
+    this.getProducts = this.getProducts.bind(this)
+
+  }
+
+  getCategories(){
+    var categoriesRef = database.ref('categories/')
+    categoriesRef.once('value').then((snapshot)=>{
+      var mycategories = {...(snapshot.val())}
+      var catKeys = Object.keys(mycategories)
+      var temp = catKeys.map((catkey) => mycategories[catkey])
+      temp.sort((a, b) => a["id"] - b["id"])
+      this.setState({
+        categories: temp
+      })
+    })
+  }
+
+  getPackages(){
+    var packagesRef = database.ref('packages/')
+    packagesRef.once('value').then((snapshot) => {
+      this.setState({
+        packages: {...(snapshot.val())}
+      })
+    })
+  }
+
+  getProducts(){
+    var productsRef = database.ref('products/')
+    productsRef.once('value').then((snapshot)=>{
+      var mypdts = {...(snapshot.val())}
+      var mycategories = this.state.categories
+      var catKeys = Object.keys(mycategories)
+      var temp = catKeys.map((catkey) => {
+        var x = {...mycategories[catkey]}
+        var y = {
+          id: x.id,
+          category: x.title,
+        } 
+        var z = null
+        var tlist = x.products
+        if(x.products.length == 1){
+          //get packages
+          z = {...(this.state.packages)}
+          tlist = mypdts[x.products[0]].packages
+        } else {
+          //get products
+          z = {...mypdts}
+        }
+        var mylist = tlist.map((pdtkey) => {
+          let k = {
+            img: img01,
+            id: (z[pdtkey]).id,
+            title: (z[pdtkey]).title,
+            price: ((z[pdtkey]).price) ? ((z[pdtkey]).price) : 0
+          }
+          return {...k}
+        })
+        y = {
+          products: mylist,
+          ...y
+        }
+        return y      
+      })
+      this.setState({
+        products: temp
+      })
+    })
+  }
+
+  componentDidMount(){
+    this.getCategories()
+    this.getPackages()
+    this.getProducts()
   }
 
   render() {
     const HomeScreen = ({ navigation }) => {
-      const CategoryRefContainer = useRef(null)
-      const ProductsRefContainer = useRef(null)
+      const categoryRefContainer = useRef(null)
+      const productsRefContainer = useRef(null)
 
       const handleScroll = (i) => {
-        CategoryRefContainer.current.scrollToIndex({
-          index: i,
-          viewPosition: 0.5
-        })
+        if(categoryRefContainer.current) {
+          categoryRefContainer.current.scrollToIndex({
+            index: i,
+            viewPosition: 0.5
+          })
+        }
 
-        ProductsRefContainer.current.scrollToIndex({
-          index: i
-        })
+        if(productsRefContainer.current) {
+          productsRefContainer.current.scrollToIndex({
+            index: i
+          })
+        }
       }
 
-      const handleProductsScroll = (i) => {            
-        CategoryRefContainer.current.scrollToIndex({
-          index: i,
-          viewPosition: 0.5
-        })
+      const handleProductsScroll = (i) => {      
+        if(categoryRefContainer.current) { 
+          categoryRefContainer.current.scrollToIndex({
+            index: i,
+            viewPosition: 0.5
+          })
+        }     
       }
-
+ 
       const handleViewProduct = () => {
         navigation.navigate("Product")
       }
@@ -104,13 +282,25 @@ export default class App extends React.Component {
       const handleViewBasket = () => {
         navigation.navigate("Basket")
       }
-  
+      
       return (
         <>
-          <Categories handleScroll={handleScroll} listRef={CategoryRefContainer}/>
+          {
+            (this.state.categories.length == 0) ? 
+            (<Text>Loading...</Text>) :
+            (<Categories handleScroll={handleScroll} listRef={categoryRefContainer} data={this.state.categories}/>)
+          }
           <View style={styles.productsBody}>
-            <Products handleViewProduct={handleViewProduct} listRef={ProductsRefContainer} handleScroll={handleProductsScroll}/>
-            <Checkout handleOpenBasket={handleViewBasket}/>
+            {
+              (this.state.products.length == 0) ? 
+              (<Text>Loading...</Text>) :
+              (
+                <>
+                <Products data={this.state.products} handleViewProduct={handleViewProduct} listRef={productsRefContainer} handleScroll={handleProductsScroll}/>
+                <Checkout handleOpenBasket={handleViewBasket}/>
+                </>
+              )
+            }
           </View>
         </>
       )

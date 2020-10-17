@@ -1,82 +1,10 @@
-import React, { useState } from 'react'
-import { Animated, Image, Pressable, View, ScrollView, StyleSheet, useWindowDimensions } from 'react-native'
+import React, { useRef } from 'react'
+import { Image, Pressable, View, StyleSheet, useWindowDimensions } from 'react-native'
 
-import { Icon, Text } from 'react-native-elements'
+import { Text } from 'react-native-elements'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { iOSUIKit, iOSColors, systemWeights } from 'react-native-typography'
-
-import img01 from '../assets/img001.jpg'
-import img02 from '../assets/img002.jpg'
-import img03 from '../assets/img003.jpg'
-import img04 from '../assets/img004.jpg'
-import img05 from '../assets/img005.jpg'
-
-const data = [
-    {id: '0', category: 'Suits', products:[
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'}
-    ]},
-    {id: '1', category: 'Suits', products:[
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'}
-    ]},
-    {id: '2', category: 'Suits', products:[
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-    ]},
-    {id: '3', category: 'Suits', products:[
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-    ]},
-    {id: '4', category: 'Suits', products:[
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-    ]},
-    {id: '5', category: 'Suits', products:[
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'}
-    ]},
-    {id: '6', category: 'Suits', products:[
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'}
-    ]},
-    {id: '7', category: 'Suits', products:[
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'}
-    ]},
-    {id: '8', category: 'Suits', products:[
-        {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-        {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-        {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-    ]},
-]
+import { iOSUIKit } from 'react-native-typography'
 
 const Product = ({ title, img, price, width, handleViewProduct }) => (
     <Pressable
@@ -86,7 +14,7 @@ const Product = ({ title, img, price, width, handleViewProduct }) => (
     >
         <Image source={img} style={{resizeMode: 'cover', width: width, ...styles.productImage}}/>
         <Text style={{...iOSUIKit.title3, ...styles.productTitle}}>{title}</Text>
-        <Text style={{...iOSUIKit.title3Emphasizedmm, ...styles.productPrice}}>{price}</Text>
+        <Text style={{...iOSUIKit.title3Emphasizedmm, ...styles.productPrice}}>{ "UGX " + price}</Text>
     </Pressable>
 )
 
@@ -110,18 +38,18 @@ const CategoryProducts = function ({ data, handleViewProduct }) {
     )
 }
 
-export default function Products({ handleViewProduct, listRef, handleScroll }) {
-    const viewabilityConfig = {
+export default function Products({ data, handleViewProduct, listRef, handleScroll }) {
+    const viewabilityConfigRef = useRef({
         viewAreaCoveragePercentThreshold: 100,
         minimumViewTime: 250
-    }
+    })
 
-    const onViewableItemsChanged = ({viewableItems}) => {
+    const onViewableItemsChangedRef = useRef(({viewableItems}) => {
         if(viewableItems.length) {
             const index = viewableItems[0].index
             handleScroll(index)
         }
-    }
+    })
 
     const renderItem = ({ item }) => (
         <CategoryProducts 
@@ -139,8 +67,8 @@ export default function Products({ handleViewProduct, listRef, handleScroll }) {
                 horizontal={true}
                 snapToInterval={0}
                 snapToAlignment={'center'}
-                viewabilityConfig={viewabilityConfig}
-                onViewableItemsChanged={onViewableItemsChanged}
+                viewabilityConfig={viewabilityConfigRef.current}
+                onViewableItemsChanged={onViewableItemsChangedRef.current}
             />
         </View>
     )

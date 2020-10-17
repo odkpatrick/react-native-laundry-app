@@ -15,8 +15,8 @@ export default function Checkout({ handleOpenBasket }) {
       >
         <View style={styles.details}>
           <Icon name="shopping-basket" type="fontisto" size={22} style={styles.icon}/>
-          <Text style={{...iOSUIKit.body, ...styles.text}}>Your basket({2})</Text>
-          <Text style={{...iOSUIKit.bodyEmphasized, ...styles.text}}>£ 25.99</Text>
+          <Text style={{...iOSUIKit.body, ...styles.text}}>Your basket</Text>
+          <Text style={{...iOSUIKit.bodyEmphasized, ...styles.text}}>UGX 0.00</Text>
         </View>
         <Icon name="arrow-right" size={20} type="fontisto" style={{...styles.icon}}/>
       </Pressable>
