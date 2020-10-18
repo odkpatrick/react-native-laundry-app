@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons'
 
-export default function Product() {
+export default function Product({ route }) {
+    const [{product}] = useState(route.params)
+
     return (
         <View style={styles.container}>
-            <Text>Product details here</Text>
+            { console.log("the object :::::     ",product) }
+            <Text>details here</Text>
         </View>
     )
 }

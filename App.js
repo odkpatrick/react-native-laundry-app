@@ -19,10 +19,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack';
 
 import img01 from './assets/img001.jpg'
-import img02 from './assets/img002.jpg'
-import img03 from './assets/img003.jpg'
-import img04 from './assets/img004.jpg'
-import img05 from './assets/img005.jpg'
 
 import * as firebase from 'firebase'
 
@@ -86,87 +82,10 @@ export default class App extends React.Component {
     this.state = {
       categories: [],
       products: [],
+      categoriesObject: null,
+      productsObject: null,
       packages: null,
-
-      basket: [],
-      /*
-      categories: [
-        {id: '0', title: 'Suits', icon: 'suitcase-alt'},
-        {id: '1', title: 'Business', icon: 'suitcase'},
-        {id: '2', title: 'Home', icon: 'home'},
-        {id: '3', title: 'Outdoor', icon: 'swimsuit'},
-        {id: '4', title: 'Bedroom', icon: 'room'},
-        {id: '5', title: 'Accessories', icon: 'stopwatch'},
-        {id: '6', title: 'Laundry', icon: 'shopping-basket'},
-        {id: '7', title: 'Trousers', icon: 'swimsuit'},
-        {id: '8', title: 'Tops', icon: 'suitcase'},
-      ],
-      products: [
-        {id: '0', category: 'Suits', products:[
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'}
-        ]},
-        {id: '1', category: 'Suits', products:[
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'}
-        ]},
-        {id: '2', category: 'Suits', products:[
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-        ]},
-        {id: '3', category: 'Suits', products:[
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        ]},
-        {id: '4', category: 'Suits', products:[
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-        ]},
-        {id: '5', category: 'Suits', products:[
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'}
-        ]},
-        {id: '6', category: 'Suits', products:[
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'}
-        ]},
-        {id: '7', category: 'Suits', products:[
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'}
-        ]},
-        {id: '8', category: 'Suits', products:[
-            {id: '3', title: 'T-shirts', img: img04, price: '£ 2.75'},
-            {id: '4', title: 'Knitwear', img: img05, price: '£ 19.00'},
-            {id: '0', title: 'Shirts Promo', img: img01, price: '£ 12.00'},
-            {id: '1', title: 'Shirts', img: img02, price: '£ 2.60'},
-            {id: '2', title: 'Blouses', img: img03, price: '£ 6.00'},
-        ]},
-      ],
-      */
+      basket: []
     }
 
     this.getCategories = this.getCategories.bind(this)
@@ -179,11 +98,12 @@ export default class App extends React.Component {
     var categoriesRef = database.ref('categories/')
     categoriesRef.once('value').then((snapshot)=>{
       var mycategories = {...(snapshot.val())}
-      var catKeys = Object.keys(mycategories)
-      var temp = catKeys.map((catkey) => mycategories[catkey])
+      var categoryKeys = Object.keys(mycategories)
+      var temp = categoryKeys.map((category) => mycategories[category])
       temp.sort((a, b) => a["id"] - b["id"])
       this.setState({
-        categories: temp
+        categories: temp,
+        categoriesObject: {...mycategories}
       })
     })
   }
@@ -200,50 +120,43 @@ export default class App extends React.Component {
   getProducts(){
     var productsRef = database.ref('products/')
     productsRef.once('value').then((snapshot)=>{
-      var mypdts = {...(snapshot.val())}
-      var mycategories = this.state.categories
-      var catKeys = Object.keys(mycategories)
-      var temp = catKeys.map((catkey) => {
-        var x = {...mycategories[catkey]}
-        var y = {
-          id: x.id,
-          category: x.title,
-        } 
-        var z = null
-        var tlist = x.products
-        if(x.products.length == 1){
-          //get packages
-          z = {...(this.state.packages)}
-          tlist = mypdts[x.products[0]].packages
-        } else {
-          //get products
-          z = {...mypdts}
+      var myproducts = {...(snapshot.val())}
+      var mycategories = {...(this.state.categoriesObject)}
+      var categoryKeys = Object.keys(mycategories)
+      var temp = categoryKeys.map(function(category){
+        var mycategory = {...mycategories[category]}
+        var productList = mycategory.products
+        var myResult = {
+          id: mycategory.id,
+          category: mycategory.title,
         }
-        var mylist = tlist.map((pdtkey) => {
-          let k = {
+        var temp2 = productList.map(function(product){
+          var tempproduct = {
+            id: myproducts[product].id,
+            title: myproducts[product].title,
             img: img01,
-            id: (z[pdtkey]).id,
-            title: (z[pdtkey]).title,
-            price: ((z[pdtkey]).price) ? ((z[pdtkey]).price) : 0
+            price: 0
           }
-          return {...k}
+          return {...tempproduct}
         })
-        y = {
-          products: mylist,
-          ...y
+        var myResult2 = {
+          products: temp2,
+          ...myResult 
         }
-        return y      
+        return {...myResult2}
       })
+      temp.sort((a, b) => a["id"] - b["id"])
       this.setState({
-        products: temp
+        products: temp,
+        productsObject: {...myproducts}
       })
     })
   }
 
   componentDidMount(){
     this.getCategories()
-    this.getPackages()
     this.getProducts()
+    this.getPackages()
   }
 
   render() {
@@ -275,8 +188,16 @@ export default class App extends React.Component {
         }     
       }
  
-      const handleViewProduct = () => {
-        navigation.navigate("Product")
+      const handleViewProduct = (productid) => {
+        var myproducts = {...(this.state.productsObject)}
+        var productskeys = Object.keys(myproducts)
+        var myproductlist = productskeys.filter(function(productkey){
+          return myproducts[productkey].id === productid
+        })
+        var productkey = myproductlist[0]
+        navigation.navigate("Product", {
+          product: {...myproducts[productkey]}
+        })
       }
   
       const handleViewBasket = () => {

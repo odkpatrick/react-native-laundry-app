@@ -6,10 +6,10 @@ import { FlatList } from 'react-native-gesture-handler'
 
 import { iOSUIKit } from 'react-native-typography'
 
-const Product = ({ title, img, price, width, handleViewProduct }) => (
+const Product = ({ productid, title, img, price, width, handleViewProduct }) => (
     <Pressable
         onPress={() => {
-            handleViewProduct()
+            handleViewProduct(productid)
         }}
     >
         <Image source={img} style={{resizeMode: 'cover', width: width, ...styles.productImage}}/>
@@ -23,6 +23,7 @@ const CategoryProducts = function ({ data, handleViewProduct }) {
 
     const renderItem = ({ item }) => (
         <Product
+            productid={item.id}
             title={item.title}
             img={item.img}
             price={item.price}
