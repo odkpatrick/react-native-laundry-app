@@ -195,8 +195,19 @@ export default class App extends React.Component {
           return myproducts[productkey].id === productid
         })
         var productkey = myproductlist[0]
+        var mypackages = {...(this.state.packages)}
+        var packageslist = myproducts[productkey].packages
+        var temp = packageslist.map(function(packagekey){
+          var newpackage = {
+            id: mypackages[packagekey].id,
+            package: mypackages[packagekey],
+            count: 0
+          }
+          return {...newpackage}
+        })
         navigation.navigate("Product", {
-          product: {...myproducts[productkey]}
+          product: {...myproducts[productkey]},
+          packages: temp
         })
       }
   
@@ -249,9 +260,7 @@ export default class App extends React.Component {
           <Stack.Screen 
             name="Product"
             component={Product}
-            options={{
-              headerTitle: "Product"
-            }}
+            options={({ route, navigation }) => ({ title: route.params.product.title })}
           />
           <Stack.Screen 
             name="Orders"
