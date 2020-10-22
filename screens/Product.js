@@ -5,21 +5,15 @@ import Checkout from '../components/checkout'
 
 import { Icon } from 'react-native-elements'
 
-import { FontAwesome5, FontAwesome } from '@expo/vector-icons'
-
 import img01 from '../assets/img001.jpg'
 import { FlatList } from 'react-native-gesture-handler'
 
-export default function Product({ route, navigation }) {
-    const { product, packages } = route.params
+export default function Product({ allpackages, product, packages, updateBasket, handleViewBasket }) {
     const [myproduct] = useState({...product})  // This is the product
-    const [mypackages, setPackages] = useState([...packages]) // This is the package list with count
+    const [mypackages] = useState(packages)     // This is the package list with count
+    const [basketPackages] = useState({...packages})
 
     const width = useWindowDimensions().width
-
-    const handleViewBasket = () => {
-        navigation.navigate("Basket")
-    }
 
     const ControlBtn = ({ sign, handlePress }) => (
         <Pressable
@@ -30,35 +24,12 @@ export default function Product({ route, navigation }) {
     )
 
     const Package = ({ id, title, price, count }) => {
-
         const handleAdd = () => {
-            var newPackages = mypackages
-            var temp = newPackages.map(function(mypackage){
-                if(mypackage.id === id) {
-                    var newCount = mypackage.count + 1
-                    var newpackage = {...mypackage}
-                    newpackage.count = newCount
-                    return {...newpackage}
-                } else {
-                    return {...mypackage}
-                }
-            })
-            setPackages(() => (temp))
+            updateBasket("add", id, myproduct.id)
         }
 
         const handleSub = () => {
-            var newPackages = mypackages
-            var temp = newPackages.map(function(mypackage){
-                if(mypackage.id === id) {
-                    var newCount = mypackage.count - 1
-                    var newpackage = {...mypackage}
-                    newpackage.count = newCount
-                    return {...newpackage}
-                } else {
-                    return {...mypackage}
-                }
-            })
-            setPackages(() => (temp))
+            updateBasket("sub", id, myproduct.id)
         }
         
         return (
@@ -67,7 +38,7 @@ export default function Product({ route, navigation }) {
                 <Text>{price}</Text>
                 <View style={styles.packageControl}>
                     {
-                        (count === 0) ?
+                        (count==0) ?
                         (<ControlBtn sign="plus" handlePress={handleAdd} />) :
                         (
                             <>
@@ -85,8 +56,8 @@ export default function Product({ route, navigation }) {
     const renderItem = ({ item }) => (
         <Package
             id={item.id}
-            title={item.package.title}
-            price={item.package.price}
+            title={item.title}
+            price={item.price}
             count={item.count}
         />
     )
@@ -95,7 +66,7 @@ export default function Product({ route, navigation }) {
         <View style={styles.container}>
             <View>
                 <Image source={img01} style={{resizeMode: 'cover', width: width, ...styles.productImage}}/>
-                <Text>{ product.title }</Text>
+                <Text>{ myproduct.title }</Text>
                 <Text>Description</Text>
             </View>
             <View style={styles.packages}>

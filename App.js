@@ -91,6 +91,7 @@ export default class App extends React.Component {
     this.getCategories = this.getCategories.bind(this)
     this.getPackages = this.getPackages.bind(this)
     this.getProducts = this.getProducts.bind(this)
+    this.updateBasket = this.updateBasket.bind(this)
 
   }
 
@@ -114,6 +115,16 @@ export default class App extends React.Component {
       this.setState({
         packages: {...(snapshot.val())}
       })
+      var mybasket = this.state.basket
+      var mypackages = {...(snapshot.val())}
+      mybasket.forEach(function(productObject){
+        var productpackages = productObject.packages
+        var temp = []
+        productpackages.forEach(function(packagekey){
+          temp.push({ count: 0, ...mypackages[packagekey]})
+        })
+        productObject.packages = temp
+      })
     })
   }
 
@@ -135,7 +146,8 @@ export default class App extends React.Component {
             id: myproducts[product].id,
             title: myproducts[product].title,
             img: img01,
-            price: 0
+            price: 0,
+            packages: myproducts[product].packages
           }
           return {...tempproduct}
         })
@@ -146,17 +158,38 @@ export default class App extends React.Component {
         return {...myResult2}
       })
       temp.sort((a, b) => a["id"] - b["id"])
+      var temp2 = []
+      temp.forEach(function({ products }){
+        products.forEach(function(product){
+          temp2.push({...product})
+        })
+      })
       this.setState({
         products: temp,
-        productsObject: {...myproducts}
+        productsObject: {...myproducts},
+        basket: temp2
       })
+      this.getPackages()      
     })
+  }
+
+  updateBasket(action, packageid, productid){
+    console.log("Perform "+ action + " on")
+    console.log("Package with id : " + packageid)
+    console.log("To product with id : " + productid)
+
+    // get instance of object in basket
+    // get instance of package in object instance
+    // update package count in instance
+    // update basket
+
+    
+    
   }
 
   componentDidMount(){
     this.getCategories()
     this.getProducts()
-    this.getPackages()
   }
 
   render() {
@@ -188,26 +221,22 @@ export default class App extends React.Component {
         }     
       }
  
-      const handleViewProduct = (productid) => {
+      const handleViewProduct = (productid) => {        
         var myproducts = {...(this.state.productsObject)}
         var productskeys = Object.keys(myproducts)
         var myproductlist = productskeys.filter(function(productkey){
           return myproducts[productkey].id === productid
         })
         var productkey = myproductlist[0]
-        var mypackages = {...(this.state.packages)}
-        var packageslist = myproducts[productkey].packages
-        var temp = packageslist.map(function(packagekey){
-          var newpackage = {
-            id: mypackages[packagekey].id,
-            package: mypackages[packagekey],
-            count: 0
-          }
-          return {...newpackage}
+        var mybasket = this.state.basket
+        var myproduct = {...myproducts[productkey]}
+        var basketmatch = mybasket.filter(function(productObject){
+          return productObject.id === productid
         })
+        var mathcproduct = {...basketmatch[0]}
         navigation.navigate("Product", {
-          product: {...myproducts[productkey]},
-          packages: temp
+          product: {...myproduct},
+          packages: mathcproduct.packages,
         })
       }
   
@@ -237,7 +266,25 @@ export default class App extends React.Component {
         </>
       )
     }
-  
+
+    const ProductScreen = ({ route, navigation }) => {
+      const { product, packages } = route.params
+
+      const handleViewBasket = () => {
+        navigation.navigate("Basket")
+      }
+      return (
+        <Product 
+          updateBasket={this.updateBasket}
+          product={{...product}}
+          packages={packages}
+          handlePress={handleViewBasket}
+          handleViewBasket={handleViewBasket}
+          allpackages={{...this.state.packages}}
+        />
+      )
+    }
+      
     return (
       <NavigationContainer style={styles.container}>
         <Stack.Navigator>
@@ -259,8 +306,8 @@ export default class App extends React.Component {
           />
           <Stack.Screen 
             name="Product"
-            component={Product}
-            options={({ route, navigation }) => ({ title: route.params.product.title })}
+            component={ProductScreen}
+            options={({ route }) => ({ title: route.params.product.title })}
           />
           <Stack.Screen 
             name="Orders"
