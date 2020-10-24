@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
 import { Icon, Text } from 'react-native-elements'
@@ -174,17 +174,38 @@ export default class App extends React.Component {
   }
 
   updateBasket(action, packageid, productid){
-    console.log("Perform "+ action + " on")
-    console.log("Package with id : " + packageid)
-    console.log("To product with id : " + productid)
+    var mybasket = this.state.basket
+    var matchlist = mybasket.filter(function(product){
+      return (product.id === productid)
+    })
 
-    // get instance of object in basket
-    // get instance of package in object instance
-    // update package count in instance
-    // update basket
+    var myproduct = matchlist[0]
+    var productindex = mybasket.indexOf(myproduct)
+    var productpackages = myproduct.packages
+    var packagematch = productpackages.filter(function(apackage){
+      return (apackage.id === packageid)
+    })
+    
+    var mypackage = packagematch[0]
 
-    
-    
+    var mycount = mypackage.count
+
+    if(action === "add") {
+      mycount += 1
+    } else {
+      mycount -= 1
+    }
+
+    mypackage.count = mycount
+    myproduct = {
+      packages: productpackages,
+      ...myproduct
+    }
+    mybasket[productindex] = {...myproduct}
+
+    this.setState({
+      basket: mybasket
+    })
   }
 
   componentDidMount(){
@@ -241,7 +262,11 @@ export default class App extends React.Component {
       }
   
       const handleViewBasket = () => {
-        navigation.navigate("Basket")
+        var mybasket = this.state.basket
+        navigation.navigate("Basket", {
+          basket: mybasket
+        }
+        )
       }
       
       return (
@@ -258,7 +283,7 @@ export default class App extends React.Component {
               (
                 <>
                 <Products data={this.state.products} handleViewProduct={handleViewProduct} listRef={productsRefContainer} handleScroll={handleProductsScroll}/>
-                <Checkout handleOpenBasket={handleViewBasket}/>
+                <Checkout basket={this.state.basket} handleOpenBasket={handleViewBasket}/>
                 </>
               )
             }
@@ -271,16 +296,45 @@ export default class App extends React.Component {
       const { product, packages } = route.params
 
       const handleViewBasket = () => {
-        navigation.navigate("Basket")
+        var mybasket = this.state.basket
+        navigation.navigate("Basket", {
+            basket: mybasket
+          }
+        )
       }
       return (
         <Product 
+          basket={this.state.basket}
           updateBasket={this.updateBasket}
           product={{...product}}
           packages={packages}
-          handlePress={handleViewBasket}
           handleViewBasket={handleViewBasket}
           allpackages={{...this.state.packages}}
+        />
+      )
+    }
+
+    const BasketScreen = ({ route }) => {
+      const { basket } = route.params
+
+      const getPackages = () => {
+        var mybasket = basket
+        var mypackages = []
+        mybasket.forEach((product) => {
+          product.packages.forEach((mypackage) => {
+            var count = mypackage.count
+            if(count){
+              mypackages.push({productid: product.id, ...mypackage})
+            }
+          })
+        })
+        return mypackages
+      }
+
+      return (
+        <Basket 
+          basket={getPackages()}
+          updateBasket={this.updateBasket}
         />
       )
     }
@@ -325,7 +379,7 @@ export default class App extends React.Component {
           />
           <Stack.Screen 
             name="Basket"
-            component={Basket}
+            component={BasketScreen}
             options={() => ({
               headerTitle: "Basket",
             })}

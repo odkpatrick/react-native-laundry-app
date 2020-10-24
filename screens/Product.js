@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
+import { FlatList, Image, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native'
 
 import Checkout from '../components/checkout'
 
-import { Icon } from 'react-native-elements'
+import { Icon, Text } from 'react-native-elements'
+
+import { iOSUIKit } from 'react-native-typography'
 
 import img01 from '../assets/img001.jpg'
-import { FlatList } from 'react-native-gesture-handler'
 
-export default function Product({ allpackages, product, packages, updateBasket, handleViewBasket }) {
+export default function Product({ basket, product, packages, updateBasket, handleViewBasket }) {
     const [myproduct] = useState({...product})  // This is the product
     const [mypackages] = useState(packages)     // This is the package list with count
-    const [basketPackages] = useState({...packages})
 
     const width = useWindowDimensions().width
 
@@ -34,8 +34,8 @@ export default function Product({ allpackages, product, packages, updateBasket, 
         
         return (
             <View style={styles.package}>
-                <Text>{title}</Text>
-                <Text>{price}</Text>
+                <Text style={{...iOSUIKit.title3Emphasized, ...styles.packageTitle}}>{title}</Text>
+                <Text style={{...iOSUIKit.title3Emphasized, ...styles.packagePrice}}>{price}</Text>
                 <View style={styles.packageControl}>
                     {
                         (count==0) ?
@@ -43,7 +43,7 @@ export default function Product({ allpackages, product, packages, updateBasket, 
                         (
                             <>
                                 <ControlBtn sign="minus" handlePress={handleSub} />
-                                <Text>{count}</Text>
+                                <Text style={{...iOSUIKit.title3, ...styles.packageCount}}>{count}</Text>
                                 <ControlBtn sign="plus" handlePress={handleAdd} />
                             </>
                         )
@@ -70,12 +70,11 @@ export default function Product({ allpackages, product, packages, updateBasket, 
                 <Text>Description</Text>
             </View>
             <View style={styles.packages}>
-                <Text>Packages</Text>
                 <FlatList 
                     data={mypackages}
                     renderItem={renderItem}
                 />
-                <Checkout handleOpenBasket={handleViewBasket}/>
+                <Checkout basket={basket} handleOpenBasket={handleViewBasket}/>
             </View>
         </View>
     )
@@ -90,12 +89,23 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     package: {
-        flexDirection: "row"
+        flexDirection: "row",
+        paddingVertical: 5
     },
     packages: {
         flex: 1
     },
+    packageTitle: {
+
+    },
+    packagePrice: {
+        paddingHorizontal: 10
+    },
     packageControl: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingHorizontal: 10
+    },
+    packageCount: {
+        paddingHorizontal: 10
     }
 })
