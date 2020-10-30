@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FlatList, Image, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native'
+import { FlatList, Image, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
 
 import Checkout from '../components/checkout'
 
@@ -34,20 +34,25 @@ export default function Product({ basket, product, packages, updateBasket, handl
         
         return (
             <View style={styles.package}>
-                <Text style={{...iOSUIKit.title3Emphasized, ...styles.packageTitle}}>{title}</Text>
-                <Text style={{...iOSUIKit.title3Emphasized, ...styles.packagePrice}}>{price}</Text>
+                <View style={styles.packageDetails}>
+                    <Text style={{...iOSUIKit.title3Emphasized, ...styles.packageTitle}}>{title}</Text>
+                    <Text>Package Description</Text>
+                </View>
                 <View style={styles.packageControl}>
-                    {
-                        (count==0) ?
-                        (<ControlBtn sign="plus" handlePress={handleAdd} />) :
-                        (
-                            <>
-                                <ControlBtn sign="minus" handlePress={handleSub} />
-                                <Text style={{...iOSUIKit.title3, ...styles.packageCount}}>{count}</Text>
-                                <ControlBtn sign="plus" handlePress={handleAdd} />
-                            </>
-                        )
-                    }
+                    <Text style={{...iOSUIKit.title3Emphasized, ...styles.packagePrice}}>{price}</Text>
+                    <View style={styles.controls}>
+                        {
+                            (count==0) ?
+                            (<ControlBtn sign="plus" handlePress={handleAdd} />) :
+                            (
+                                <>
+                                    <ControlBtn sign="minus" handlePress={handleSub} />
+                                    <Text style={{...iOSUIKit.title3, ...styles.packageCount}}>{count}</Text>
+                                    <ControlBtn sign="plus" handlePress={handleAdd} />
+                                </>
+                            )
+                        }
+                    </View>
                 </View>
             </View>
         )
@@ -66,15 +71,18 @@ export default function Product({ basket, product, packages, updateBasket, handl
         <View style={styles.container}>
             <View>
                 <Image source={img01} style={{resizeMode: 'cover', width: width, ...styles.productImage}}/>
-                <Text>{ myproduct.title }</Text>
-                <Text>Description</Text>
+                <Text style={{...styles.packageDescription}}>Description</Text>
+                <Text style={{...iOSUIKit.title3, ...styles.productTitle}}>{ myproduct.title }</Text>
             </View>
-            <View style={styles.packages}>
-                <FlatList 
-                    data={mypackages}
-                    renderItem={renderItem}
-                />
-                <Checkout basket={basket} handleOpenBasket={handleViewBasket}/>
+            <FlatList 
+                data={mypackages}
+                renderItem={renderItem}
+            />
+            <View style={styles.faq}>
+                <Text>FAQ</Text>
+            </View>
+            <View>
+                <Checkout style={styles.checkout} basket={basket} handleOpenBasket={handleViewBasket}/>
             </View>
         </View>
     )
@@ -88,24 +96,47 @@ const styles = StyleSheet.create({
         height: 200,
         marginBottom: 5,
     },
+    productTitle: {
+        padding: 10
+    },
     package: {
         flexDirection: "row",
-        paddingVertical: 5
+        justifyContent: "space-between",
+        borderTopWidth: 2,
+        borderTopColor: "grey",
+        padding: 10
     },
     packages: {
-        flex: 1
+        flex: 1,
+        justifyContent: 'flex-end'
     },
     packageTitle: {
 
     },
+    packageDescription: {
+        padding: 10
+    },
     packagePrice: {
         paddingHorizontal: 10
     },
+    packageDetails: {
+        backgroundColor: 'pink'
+    },
     packageControl: {
-        flexDirection: 'row',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        backgroundColor: 'blue'
     },
     packageCount: {
         paddingHorizontal: 10
+    },
+    controls: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: 'pink'
+    },
+    faq: {
+       padding: 10,
+       borderTopWidth: 2,
+       borderTopColor: 'gray' 
     }
 })

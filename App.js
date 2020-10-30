@@ -361,7 +361,9 @@ export default class App extends React.Component {
           <Stack.Screen 
             name="Product"
             component={ProductScreen}
-            options={({ route }) => ({ title: route.params.product.title })}
+            options={({ route }) => ({ 
+              
+            })}
           />
           <Stack.Screen 
             name="Orders"

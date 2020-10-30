@@ -14,7 +14,7 @@ const Product = ({ productid, title, img, price, width, handleViewProduct }) => 
     >
         <Image source={img} style={{resizeMode: 'cover', width: width, ...styles.productImage}}/>
         <Text style={{...iOSUIKit.title3, ...styles.productTitle}}>{title}</Text>
-        <Text style={{...iOSUIKit.title3Emphasizedmm, ...styles.productPrice}}>{ "UGX " + price}</Text>
+        <Text style={{...iOSUIKit.title3Emphasizedmm, ...styles.productPrice}}>{ "From " + "UGX " + price}</Text>
     </Pressable>
 )
 
